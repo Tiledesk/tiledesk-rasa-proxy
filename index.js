@@ -46,7 +46,7 @@ function message_from_request(req) {
 }
 
 app.get("/hello", (req, res) => {
-  res.send({"success":true});
+  res.status(200).send("Hello");
 })
 
 app.post("/bot", (req, res) => {
