@@ -107,7 +107,7 @@ function runRASAQuery(text, callback) {
       console.log("RASA REPLY: ", resbody)
       var result = JSON.parse(resbody)
       result.reply = intents[result.intent.name]
-      callback(JSON.parse(resbody))
+      callback(result)
     }
   );
   
