@@ -88,9 +88,19 @@ app.post("/bot", (req, res) => {
 })
 
 function runRASAQuery(text, callback) {
-  callback({
-    text: "Hello from RASA"
-  })
+  // RASA QUERY ENDPOINT: http://34.253.240.71:5000/parse?project=miobot&q=
+
+  request({
+    url: `http://34.253.240.71:5000/parse?project=miobot&q=${text}`,
+    method: 'GET'
+    },
+    function(err, res, resbody) {
+      console.log("RASA REPLY: ", resbody)
+      callback(resbody)
+    }
+  );
+
+  
 }
 
 function sendMessage(msg_json, project_id, recipient, token, callback) {
