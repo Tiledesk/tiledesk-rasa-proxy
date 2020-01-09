@@ -4,14 +4,7 @@ var cors = require('cors');
 const uuid = require('uuid');
 const bodyParser = require('body-parser');
 const https = require('https');
-const multer = require('multer');
-const util = require('util');
-const fs = require('fs');
-var exec = require('child_process').exec
 const request = require('request');
-const { WebhookClient } = require('dialogflow-fulfillment');
-const { TiledeskMessengerClient } = require('./tiledesk-messenger')
-const dialogflow = require('dialogflow');
 
 var app = express();
 app.use(cors());
