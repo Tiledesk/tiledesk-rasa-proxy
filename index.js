@@ -74,14 +74,19 @@ app.post("/bot", (req, res) => {
   runRASAQuery(text, function(result) {
     console.log("BOT: RASA REPLY: " + JSON.stringify(result));
     if(res.statusCode === 200) {
-      
-          sendMessage({ // send message back to support-group (to the end-user)
-            "text": result.text,
-            "type": TYPE_TEXT,
-            "senderFullname": "Guest Bot (dflow)"
-          }, id_project, recipient, token, function (err) {
-            console.log("Message sent. Error? ", err)
-          })
+  
+      var reply = "I didn't understand, can you rephrase?"
+      if (result.intent.confidence > 0.8) {
+        reply = result.reply
+      }
+  
+      sendMessage({ // send message back to support-group (to the end-user)
+        "text": result.text,
+        "type": TYPE_TEXT,
+        "senderFullname": "Guest Bot (dflow)"
+      }, id_project, recipient, token, function (err) {
+        console.log("Message sent. Error? ", err)
+      })
         
     }
   })
