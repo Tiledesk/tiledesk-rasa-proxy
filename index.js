@@ -31,6 +31,9 @@ const METADATA_KEY = "metadata"
 const TYPE_TEXT = 'text'
 const TYPE_IMAGE = 'image'
 const TYPE_AUDIO = 'audio'
+const COMMAND_TYPE_MESSAGE = "message"
+const COMMAND_TYPE_WAIT = "wait"
+
 
 const endpoint = "https://tiledesk-server-pre.herokuapp.com";
 
@@ -64,7 +67,7 @@ app.post("/bot", (req, res) => {
   console.log("BOT: request.headers.host",req.headers.host);
 
   // immediatly reply to caller
-  res.send({"success":true});
+  res.status(200).send({"success":true});
 
   // const messenger = new TiledeskMessengerClient({ request: req });
 
@@ -73,7 +76,24 @@ app.post("/bot", (req, res) => {
   runRASAQuery(text, function(result) {
     console.log("BOT: DF REPLY: " + JSON.stringify(result));
     if(res.statusCode === 200) {
-      var commands = findSplits(result)
+      // var commands = findSplits(result)
+
+      var commands = []
+      commands[0] = {}
+      commands[0].type = COMMAND_TYPE_MESSAGE
+      commands[0].text = "Hi"
+      commands[1] = {}
+      commands[1].type = COMMAND_TYPE_WAIT
+      commands[1].time = 2000
+      commands[2] = {}
+      commands[2].type = COMMAND_TYPE_MESSAGE
+      commands[2].text = "Welcome to my RASA"
+      commands[3] = {}
+      commands[3].type = COMMAND_TYPE_WAIT
+      commands[3].time = 2000
+      commands[4] = {}
+      commands[4].type = COMMAND_TYPE_MESSAGE
+      commands[4].text = "Ask me your question"
 
       let i = 0
       function execute(command) {
@@ -115,6 +135,7 @@ app.post("/bot", (req, res) => {
           sendMessage({
             "text": parsed_reply.text,
             "type": parsed_reply.type,
+            // "timestamp": Date.now(),
             "attributes": parsed_reply.attributes,
             "metadata": parsed_reply.metadata,
             "senderFullname": "Guest Bot (dflow)"
