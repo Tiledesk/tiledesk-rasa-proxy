@@ -81,7 +81,7 @@ app.post("/bot", (req, res) => {
       }
   
       sendMessage({ // send message back to support-group (to the end-user)
-        "text": result.text,
+        "text": reply,
         "type": TYPE_TEXT,
         "senderFullname": "Guest Bot (dflow)"
       }, id_project, recipient, token, function (err) {
