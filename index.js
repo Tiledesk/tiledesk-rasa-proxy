@@ -131,6 +131,7 @@ app.post("/bot", (req, res) => {
           if (fullname_email_in(command)) {
             updateEmailFullname(command, tdrequest, id_project, recipient, token)
           }
+          
 
           sendMessage({
             "text": parsed_reply.text,
