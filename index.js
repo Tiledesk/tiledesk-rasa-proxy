@@ -131,7 +131,7 @@ app.post("/bot", (req, res) => {
           if (fullname_email_in(command)) {
             updateEmailFullname(command, tdrequest, id_project, recipient, token)
           }
-          
+
 
           sendMessage({
             "text": parsed_reply.text,
@@ -153,6 +153,10 @@ app.post("/bot", (req, res) => {
     }
   })
 })
+
+function runRASAQuery(text, callback) {
+  callback({"message": "Hello from RASA"})
+}
 
 function findSplits(result) {
   var commands = []
