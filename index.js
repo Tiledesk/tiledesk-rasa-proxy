@@ -72,7 +72,7 @@ app.post("/bot", (req, res) => {
   console.log("BOT: ASKING DF...")
   const dialogflow_session_id = tdrequest.request_id
   runRASAQuery(text, function(result) {
-    console.log("BOT: DF REPLY: " + JSON.stringify(result));
+    console.log("BOT: RASA REPLY: " + JSON.stringify(result));
     if(res.statusCode === 200) {
       
           sendMessage({ // send message back to support-group (to the end-user)
@@ -96,7 +96,7 @@ function runRASAQuery(text, callback) {
     },
     function(err, res, resbody) {
       console.log("RASA REPLY: ", resbody)
-      callback(resbody)
+      callback(JSON.parse(resbody))
     }
   );
 
