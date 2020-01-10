@@ -42,7 +42,7 @@ function message_from_request(req) {
 }
 
 app.get("/hello", (req, res) => {
-  res.status(200).send("Hello");
+  res.status(200).send("Hello from webhook");
 })
 
 app.post("/bot", (req, res) => {
