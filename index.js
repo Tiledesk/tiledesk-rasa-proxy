@@ -5,6 +5,7 @@ const uuid = require('uuid');
 const bodyParser = require('body-parser');
 const https = require('https');
 const request = require('request');
+const tiledeskUtil = require('./tiledeskUtil.js')
 
 var app = express();
 app.use(cors());
@@ -79,12 +80,18 @@ app.post("/bot", (req, res) => {
       if (result.intent.confidence > 0.8) {
         reply = result.reply
       }
+
+      const parsed_reply = tiledeskUtil.parseReply(command.text)
   
-      sendMessage({ // send message back to support-group (to the end-user)
-        "text": reply,
-        "type": TYPE_TEXT,
-        "senderFullname": "Guest Bot (dflow)"
-      }, id_project, recipient, token, function (err) {
+      
+      sendMessage(
+        {
+          "text": parsed_reply.text,
+          "type": parsed_reply.type,
+          "attributes": parsed_reply.attributes,
+          "metadata": parsed_reply.metadata,
+          "senderFullname": "Guest Bot (RASA)"
+        }, id_project, recipient, token, function (err) {
         console.log("Message sent. Error? ", err)
       })
         
