@@ -81,7 +81,7 @@ app.post("/bot", (req, res) => {
         reply = result.reply
       }
 
-      const parsed_reply = tiledeskUtil.parseReply(command.text)
+      const parsed_reply = tiledeskUtil.parseReply(reply)
   
       
       sendMessage(
