@@ -81,16 +81,18 @@ app.post("/bot", (req, res) => {
         reply = result.reply
       }
 
+      // optionally you can parse a message tagged
+      // with micro-language (documentation coming soon)
       const parsed_reply = tiledeskUtil.parseReply(reply)
   
       
       sendMessage(
         {
-          "text": parsed_reply.text,
-          "type": parsed_reply.type,
-          "attributes": parsed_reply.attributes,
-          "metadata": parsed_reply.metadata,
-          "senderFullname": "Guest Bot (RASA)"
+          "text": parsed_reply.text, // or message text
+          "type": parsed_reply.type, // or "text"
+          "attributes": parsed_reply.attributes, // can be null
+          "metadata": parsed_reply.metadata, // used for media like images
+          "senderFullname": "Guest Bot (RASA)" // or whatever you want
         }, id_project, recipient, token, function (err) {
         console.log("Message sent. Error? ", err)
       })
@@ -103,7 +105,7 @@ function runRASAQuery(text, callback) {
   // RASA QUERY ENDPOINT: http://34.253.240.71:5000/parse?project=miobot&q=
 
   intents = {
-    hello: "Hello from RASA"
+    hello: "Hello from RASA\n*How are you?\n*oops sorry!"
   }
 
   request({
