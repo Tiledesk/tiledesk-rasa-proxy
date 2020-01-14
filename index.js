@@ -86,7 +86,7 @@ app.post("/bot", (req, res) => {
         }, id_project, recipient, token, function (err) {
         console.log("Message: " + msg + " sent. Error? ", err)
       })
-      timestamp = timestamp - 1
+      timestamp = timestamp - 60000
     }
   }
   else {
