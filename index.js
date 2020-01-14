@@ -73,7 +73,8 @@ app.post("/bot", (req, res) => {
   // you can optionally use the request id as a session identifier
   const session_id = tdrequest.request_id
 
-  if (text === "reverse timestamp") {
+  if (text === "custom timestamp") {
+    // shows how manually timestamp setting works with a simple test
     var timestamp = Date.now()
     for (let i = 0; i <= 3; i++) {
       var msg = "mesg[" + i + "] t: " + timestamp
