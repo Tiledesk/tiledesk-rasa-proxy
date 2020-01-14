@@ -61,17 +61,18 @@ class TiledeskUtil {
         
 
         let TEXT_KEY = 'text'
-
         let TYPE_KEY = 'type'
         let ATTRIBUTES_KEY = 'attributes'
         let METADATA_KEY = "metadata"
         let TYPE_IMAGE = 'image'
+        let TYPE_TEXT = 'text'
+        
 
-        var reply = {}
-      
-        console.log("TEXT: ", text)
-        reply[TEXT_KEY] = text
-        reply[ATTRIBUTES_KEY] = null
+        var reply = {
+            "message": {}
+        }
+        reply.message[TEXT_KEY] = text
+        reply.message[TYPE_KEY] = TYPE_TEXT
       
         // looks for images
         var image_pattern = /^\\image:.*/mg; // images are defined as a line starting with \image:IMAGE_URL
@@ -82,9 +83,9 @@ class TiledeskUtil {
           const image_text = images[0]
           var text = text.replace(image_text,"").trim()
           const image_url = image_text.replace("\\image:", "")
-          reply[TEXT_KEY] = text
-          reply[TYPE_KEY] = TYPE_IMAGE
-          reply[METADATA_KEY] = {
+          reply.message[TEXT_KEY] = text
+          reply.message[TYPE_KEY] = TYPE_IMAGE
+          reply.message[METADATA_KEY] = {
             src: image_url,
             width: 200,
             height: 200
@@ -96,8 +97,8 @@ class TiledeskUtil {
         var text_buttons = text.match(button_pattern);
         if (text_buttons) {
           // ricava il testo rimuovendo i bottoni
-          var text_with_removed_buttons = text.replace(button_pattern,"").trim();
-          reply[TEXT_KEY] = text_with_removed_buttons
+          var text_with_removed_buttons = text.replace(button_pattern,"").trim()
+          reply.message[TEXT_KEY] = text_with_removed_buttons
           // estrae i bottoni
           var buttons = []
           text_buttons.forEach(element => {
@@ -109,14 +110,28 @@ class TiledeskUtil {
             buttons.push(button)
             console.log("Added button: " + button_text)
           });
-          if (reply[ATTRIBUTES_KEY] == null) {
-            reply[ATTRIBUTES_KEY] = {}
+          if (reply.message[ATTRIBUTES_KEY] == null) {
+            reply.message[ATTRIBUTES_KEY] = {}
           }
-          reply[ATTRIBUTES_KEY]["attachment"] = {
+          reply.message[ATTRIBUTES_KEY]["attachment"] = {
             type:"template",
             buttons: buttons
           }
+          text = text_with_removed_buttons
         }
+
+        // looks for a webhook url
+        var webhook_pattern = /^\\webhook:.*/mg; // webhooks are defined as a line starting with \webhook:URL
+        var webhooks = text.match(webhook_pattern);
+        if (webhooks && webhooks.length > 0) {
+          const webhook_text = webhooks[0]
+          console.log("webhook_text: " + webhook_text)
+          text = text.replace(webhook_text,"").trim()
+          const webhook_url = webhook_text.replace("\\webhook:", "")
+          console.log("webhook_url " + webhook_url)
+          reply.webhook = webhook_url
+        }
+
         return reply
     }
 

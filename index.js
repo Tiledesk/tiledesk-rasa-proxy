@@ -89,6 +89,7 @@ app.post("/bot", (req, res) => {
       sendMessage(
         {
           "text": parsed_reply.text, // or message text
+          // "timestamp": Date.now(),
           "type": parsed_reply.type, // or "text"
           "attributes": parsed_reply.attributes, // can be null
           "metadata": parsed_reply.metadata, // used for media like images
