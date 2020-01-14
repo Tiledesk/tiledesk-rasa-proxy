@@ -84,15 +84,16 @@ app.post("/bot", (req, res) => {
       // optionally you can parse a message tagged
       // with micro-language (documentation coming soon)
       const parsed_reply = tiledeskUtil.parseReply(reply)
-  
+      
+      parsed_message = parsed_reply.message
       
       sendMessage(
         {
-          "text": parsed_reply.text, // or message text
+          "text": parsed_message.text, // or message text
           // "timestamp": Date.now(),
-          "type": parsed_reply.type, // or "text"
-          "attributes": parsed_reply.attributes, // can be null
-          "metadata": parsed_reply.metadata, // used for media like images
+          "type": parsed_message.type, // or "text"
+          "attributes": parsed_message.attributes, // can be null
+          "metadata": parsed_message.metadata, // used for media like images
           "senderFullname": "Guest Bot (RASA)" // or whatever you want
         }, id_project, recipient, token, function (err) {
         console.log("Message sent. Error? ", err)
