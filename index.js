@@ -64,43 +64,62 @@ app.post("/bot", (req, res) => {
   var token = body.token;
   console.log("BOT: token", token);
   var id_project = body.payload.id_project;
-  console.log("BOT: id_project", id_project);
+  console.log("BOT: projectId ", id_project);
   console.log("BOT: request.headers.host",req.headers.host);
 
   // immediatly reply to TILEDESK
   res.status(200).send({"success":true});
 
-  console.log("BOT: ASKING DF...")
-  const dialogflow_session_id = tdrequest.request_id
-  runRASAQuery(text, function(result) {
-    console.log("BOT: RASA REPLY: " + JSON.stringify(result));
-    if(res.statusCode === 200) {
-  
-      var reply = "I didn't understand, can you rephrase?"
-      if (result.intent.confidence > 0.8) {
-        reply = result.reply
-      }
+  // you can optionally use the request id as a session identifier
+  const session_id = tdrequest.request_id
 
-      // optionally you can parse a message tagged
-      // with micro-language (documentation coming soon)
-      const parsed_reply = tiledeskUtil.parseReply(reply)
-      
-      parsed_message = parsed_reply.message
-      
+  if (text === "reverse timestamp") {
+    var timestamp = Date.now()
+    for (let i = 0; i <= 3; i++) {
+      var msg = "mesg[" + i + "] t: " + timestamp
       sendMessage(
         {
-          "text": parsed_message.text, // or message text
-          // "timestamp": Date.now(),
-          "type": parsed_message.type, // or "text"
-          "attributes": parsed_message.attributes, // can be null
-          "metadata": parsed_message.metadata, // used for media like images
-          "senderFullname": "Guest Bot (RASA)" // or whatever you want
+          "text": msg,
+          "timestamp": timestamp,
+          "type": "text",
+          "senderFullname": "Test Bot"
         }, id_project, recipient, token, function (err) {
-        console.log("Message sent. Error? ", err)
+        console.log("Message: " + msg + " sent. Error? ", err)
       })
-        
+      timestamp = timestamp - 1
     }
-  })
+  }
+  else {
+    runRASAQuery(text, function(result) {
+      console.log("BOT: RASA REPLY: " + JSON.stringify(result));
+      if(res.statusCode === 200) {
+        
+        var reply = "I didn't understand, can you rephrase?"
+        if (result.intent.confidence > 0.8) {
+          reply = result.reply
+        }
+
+        // optionally you can parse a message tagged
+        // with micro-language (documentation coming soon)
+        const parsed_reply = tiledeskUtil.parseReply(reply)
+        
+        parsed_message = parsed_reply.message
+        
+        sendMessage(
+          {
+            "text": parsed_message.text, // or message text
+            // "timestamp": Date.now(),
+            "type": parsed_message.type, // or "text"
+            "attributes": parsed_message.attributes, // can be null
+            "metadata": parsed_message.metadata, // used for media like images
+            "senderFullname": "Guest Bot (RASA)" // or whatever you want
+          }, id_project, recipient, token, function (err) {
+          console.log("Message sent. Error? ", err)
+        })
+        
+      }
+    })
+  }
 })
 
 function runRASAQuery(text, callback) {
